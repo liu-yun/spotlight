@@ -4,7 +4,7 @@ import os
 
 
 def main():
-    print('Requesting json...', end="")
+    print('Requesting json...', end="" ,flush=True)
     json_url = 'https://arc.msn.com/v3/Delivery/Cache?pid=209567&fmt=json&rafb=0&ua=WindowsShellClient%2F0&lo=5000'
     images = []
     r = requests.get(json_url)
