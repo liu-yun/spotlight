@@ -1,35 +1,44 @@
-import requests
 import json
 import os
+import random
+import requests
+
+
+def download(url, path, s):
+    if os.path.exists(path) is False:
+        d = s.get(url)
+        if d.status_code == 200:
+            with open(path, 'wb+') as f:
+                for chunk in d:
+                    f.write(chunk)
+            print(url + '\tOK')
 
 
 def main():
-    print('Requesting json...', end="" ,flush=True)
-    json_url = 'https://arc.msn.com/v3/Delivery/Cache?pid=209567&fmt=json&rafb=0&ua=WindowsShellClient%2F0&lo=5000'
-    images = []
-    r = requests.get(json_url)
+    print('Requesting json...', end="", flush=True)
+    cache_url = 'https://arc.msn.com/v3/Delivery/Cache'
+    data = {'pid': random.choice([209562, 209567, 279978]), 'fmt': 'json', 'rafb': 0, 'ua': 'WindowsShellClient/0',
+            'lo': random.choice([5000, 80000])}
+    landscapes, portraits = [], []
+    r = requests.get(cache_url, params=data)
     if r.status_code == 200:
         for item in r.json()['batchrsp']['items']:
             d = json.loads(item['item'])
-            images.append(d['ad']['image_fullscreen_001_landscape']['u'])
-            images.append(d['ad']['image_fullscreen_001_portrait']['u'])
+            landscapes.append(d['ad']['image_fullscreen_001_landscape']['u'])
+            portraits.append(d['ad']['image_fullscreen_001_portrait']['u'])
         print('\tOK')
 
     with requests.Session() as s:
-        for url in images:
-            file_path = 'spotlight\\' + url.split('/')[3] + '.jpg'
-            if os.path.exists(file_path) is False:
-                d = s.get(url)
-                if d.status_code == 200:
-                    with open(file_path, 'wb+') as f:
-                        for chunk in d:
-                            f.write(chunk)
-                    print(url + '\tOK')
+        for url in landscapes:
+            download(url, 'spotlight\\landscape\\' + url.split('/')[3] + '.jpg', s)
+        for url in portraits:
+            download(url, 'spotlight\\portrait\\' + url.split('/')[3] + '.jpg', s)
 
 
 if __name__ == '__main__':
-    if os.path.exists('spotlight') is False:
-            os.makedirs('spotlight')
+    for dir in ['spotlight\\landscape', 'spotlight\\portrait']:
+        if os.path.exists(dir) is False:
+            os.makedirs(dir)
     count = 0
     while count < 20:
         main()
