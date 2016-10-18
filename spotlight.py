@@ -1,5 +1,6 @@
 import json
 import os
+import sys
 import random
 import uuid
 from datetime import datetime
@@ -55,13 +56,13 @@ def main():
 
     with requests.Session() as s:
         for url in landscapes:
-            download(url, 'spotlight\\landscape\\' + url.split('/')[3] + '.jpg', s)
+            download(url, sys.path[0] + '\\spotlight\\landscape\\' + url.split('/')[3] + '.jpg', s)
         for url in portraits:
-            download(url, 'spotlight\\portrait\\' + url.split('/')[3] + '.jpg', s)
+            download(url, sys.path[0] + '\\spotlight\\portrait\\' + url.split('/')[3] + '.jpg', s)
 
 
 if __name__ == '__main__':
-    for d in ['spotlight\\landscape', 'spotlight\\portrait']:
+    for d in [sys.path[0] + '\\spotlight\\landscape', '\\spotlight\\portrait']:
         if os.path.exists(d) is False:
             os.makedirs(d)
     for i in range(20):
