@@ -62,7 +62,7 @@ def main():
 
 
 if __name__ == '__main__':
-    for d in [sys.path[0] + '\\spotlight\\landscape', '\\spotlight\\portrait']:
+    for d in [sys.path[0] + '\\spotlight\\landscape', sys.path[0] + '\\spotlight\\portrait']:
         if os.path.exists(d) is False:
             os.makedirs(d)
     for i in range(20):
